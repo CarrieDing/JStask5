@@ -1,70 +1,86 @@
 /**
  * Created by Administrator on 2017/4/27.
  */
-(function(){
-    var config = [{
-        url: '/login',
-        responseText: {
-            status:200,
-            user: []
-        },
-        response: function(rq){
-            console.log("rq.data:"+rq);
-            this.responseText.user.push({
-                mock_name:"joe",
-                mock_pwd:"111"
-            });
-            this.responseText.user.push({
-                mock_name:"carrie",
-                mock_pwd:"111"
-            });
-            this.responseText.user.push({
-                mock_name:"alex",
-                mock_pwd:"111"
-            });
-            this.responseText.user.push({
-                mock_name:"jason",
-                mock_pwd:"111"
-            });
-            this.responseText.user.push({
-                mock_name:"admin",
-                mock_pwd:"111"
-            });
+function addLoadEvent(func) {
+    var oldonload=window.onload;
+    if(typeof window.onload!='function'){
+        window.onload=func;
+    }else{
+        window.onload=function () {
+            oldonload();
+            func();
         }
-    }];
-    for(var i = 0;i < config.length;i++){
-        $.mockjax(config[i]);
     }
-    $("#submitBtn").click(function(){
-        var username_=account.userCell.value;
-        var pwd_=account.password.value;
-        if(username_==""||pwd_==""){
-             Showbo.Msg.alert("请输入正确的用户名和密码")
-         }else{
-            $.ajax({
-                type:"GET",
-                url: '/login',
-                async:true,
-                success: function(result){
-                    var getUser = JSON.stringify(result.user,["mock_name"]);
-                    var Obj_User = JSON.parse(getUser);
-                    var userArr=[];
-                    $.each(Obj_User,function(i,item){
-                       userArr.push(item.mock_name);
-                    });
-                    if($.inArray(username_,userArr)>=0){
-                        Showbo.Msg.alert("用户存在，你已经登录");
-                        $('#warning').html("");
-                    }else{
-                        $('#warning').html("用户名不存在");
-                    }
-                },
-                error:function(xhr){
-                    console.log(xhr);
-                    alert("Other error！");
-                }
-            });
+}
+function getHTTPObject(){
+    if(typeof XMLHttpRequest=="undefined")
+        XMLHttpRequest=function () {
+            try{
+                return new ActiveXObject("Msxml2.XMLHTTP.6.0");
+            }catch (e){}
+            try{
+                return new ActiveXObject("Msxml2.XMLHTTP.3.0");
+            }catch (e){}
+            try{
+                return new ActiveXObject("Msxml2.XMLHTTP");
+            }catch (e){}
+            return false;
         }
-    });
-})()
+        return new XMLHttpRequest();
+}
+function submitFormAjax() {
+    var request=getHTTPObject();
+    if(!request){return false}
+    request.withCredentials=true;
+    var data='name='+encodeURIComponent(getItembyID('username').value)+'&pwd='+encodeURIComponent(getItembyID('password').value);
+    request.open('POST','/carrots-admin-ajax/a/login/?',true);
+    request.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=UTF-8');
+    request.onreadystatechange=function () {
+        if(request.readyState===4){
+                    if(request.status===200||request.status==0){
+                        var responseData=request.responseText;
+                        responseData=JSON.parse(responseData);
+                        if(responseData.message=="用户不存在"){
+                            getItembyID("warning").innerHTML="用户不存在";
+                        }else{
+                            window.location.href="http://dev.admin.carrots.ptteng.com/#/login/?name="+getItembyID('username').value+"&pwd="+getItembyID('password').value;
+                        }
+                    }
+                }
+    };
+    request.send(data);
+}
+function submitRequest() {
+    var btn = getItembyID("submitBtn");
+    btn.onclick = function () {
+        var username_ = getItembyID("username").value;
+        var pwd_ = getItembyID("password").value;
+        if (username_ == "" || pwd_ == "") {
+            Showbo.Msg.alert("请输入正确的用户名和密码")
+        }
+        if(checkUsername(username_)&&checkPWD(pwd_)){
+            submitFormAjax();
+            }else{}
+    }
+}
+function checkUsername(s) {
+    var rule=/^(\w|\W){1,20}$/;
+    if(!rule.exec(s)){
+        getItembyID("warning").innerHTML="用户名可以是中文、字母、数字、下划线，长度6-20";
+        return false;
+    }else{
+        return true;
+    }
+}
+function checkPWD(s) {
+
+    var rule=/^(\w){6,20}$/;
+    if(!rule.exec(s)){
+        getItembyID("warning").innerHTML="密码可以是字母、数字、下划线，长度6-20";
+        return false;
+    }else{
+        return true;
+    }
+}
+addLoadEvent(submitRequest);
 
