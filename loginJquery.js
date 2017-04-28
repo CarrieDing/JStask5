@@ -16,7 +16,7 @@ $(document).ready(function () {
             if(checkUsername(username_.val())&&checkPWD(pwd_.val())){
                 $.ajax({
                     type:"POST",
-                    url:"/carrots-admin-ajax/a/login/?",
+                    url:"http://dev.admin.carrots.ptteng.com/carrots-admin-ajax/a/login/?",
                     data:{name:username_.value,pwd:pwd_.value},
                     contentType:'application/x-www-form-urlencoded;charset=UTF-8',
                     async:true,
