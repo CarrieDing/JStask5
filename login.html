@@ -7,31 +7,33 @@
     <title>登录界面</title>
     <link rel="stylesheet" href="showBo.css" />
     <link rel="stylesheet" href="login.css" />
-
 </head>
 <body>
 <div class="wrap">
-<form class="formStyle" method="post" name="account">后台登录系统
-    <div class="inputStyle">
-        <img src="images/user.png" />
-        <input id="username" class="message" type="text" name="userCell" placeholder="用户名" value="" />
-    </div>
-    <div class="inputStyle">
-        <img src="images/key.png">
-        <input id="password" class="message" type="password" name="password" placeholder="密码" value="" />
-    </div>
-    <p id="warning" class="warning"></p>
-    <input id="submitBtn" class="submitBtn" type="button" value="登录" />
-</form>
+    <fieldset id="login">
+        <legend>后台登录系统</legend>
+        <form>
+            <p>
+                <label>用户名
+                    <input name="name" class="name" type="text" id="name" value="" autofocus="autofocus"  />
+                </label>
+            </p>
+            <p>
+                <label>密&#12288;码
+                    <input name="password" class="password" type="password" id="password" value="" />
+                </label>
+            </p>
+            <p id="warning" class="warning"></p>
+            <p>
+                <input type="button" id="submitBtn" class="button" value="登录"/>
+            </p>
+        </form>
+    </fieldset>
 </div>
-<script src="jquery-3.2.0.js"></script>
-<script src="jquery.mockjax.js"></script>
-<script src="loginJquery.js"></script>
-<script src="global.js"></script>
-<script src="showBo.js"></script>
-
-
-<script src="jquery.mockjson.js"></script>
+<script src="js/jquery-3.2.0.js"></script>
+<script src="js/loginJquery.js"></script>
+<script src="js/global.js"></script>
+<script src="js/showBo.js"></script>
 
 </body>
 </html>
